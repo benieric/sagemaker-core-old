@@ -51,7 +51,7 @@ logger = get_textual_rich_logger(__name__)
 
 
 class Base(BaseModel):
-    model_config = ConfigDict(protected_namespaces=(), validate_assignment=True, extra="forbid")
+    model_config = ConfigDict(protected_namespaces=(), validate_assignment=True)
 
     @classmethod
     def get_sagemaker_client(cls, session=None, region_name=None, service_name="sagemaker"):
@@ -305,10 +305,6 @@ class Action(Base):
         operation_input_args = {
             "ActionName": action_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -347,10 +343,6 @@ class Action(Base):
         operation_input_args = {
             "ActionName": self.action_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_action(**operation_input_args)
 
@@ -436,10 +428,6 @@ class Action(Base):
         operation_input_args = {
             "ActionName": self.action_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_action(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -501,9 +489,11 @@ class Action(Base):
             "SortOrder": sort_order,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -694,10 +684,6 @@ class Algorithm(Base):
         operation_input_args = {
             "AlgorithmName": algorithm_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -735,10 +721,6 @@ class Algorithm(Base):
         operation_input_args = {
             "AlgorithmName": self.algorithm_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_algorithm(**operation_input_args)
 
@@ -771,10 +753,6 @@ class Algorithm(Base):
         operation_input_args = {
             "AlgorithmName": self.algorithm_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_algorithm(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -948,9 +926,11 @@ class Algorithm(Base):
             "SortOrder": sort_order,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -1142,10 +1122,6 @@ class App(Base):
             "AppType": app_type,
             "AppName": app_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -1188,10 +1164,6 @@ class App(Base):
             "AppType": self.app_type,
             "AppName": self.app_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_app(**operation_input_args)
 
@@ -1229,10 +1201,6 @@ class App(Base):
             "AppType": self.app_type,
             "AppName": self.app_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_app(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -1410,9 +1378,11 @@ class App(Base):
             "SpaceNameEquals": space_name_equals,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -1569,10 +1539,6 @@ class AppImageConfig(Base):
         operation_input_args = {
             "AppImageConfigName": app_image_config_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -1611,10 +1577,6 @@ class AppImageConfig(Base):
         operation_input_args = {
             "AppImageConfigName": self.app_image_config_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_app_image_config(**operation_input_args)
 
@@ -1694,10 +1656,6 @@ class AppImageConfig(Base):
         operation_input_args = {
             "AppImageConfigName": self.app_image_config_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_app_image_config(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -1761,9 +1719,11 @@ class AppImageConfig(Base):
             "SortOrder": sort_order,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -1931,10 +1891,6 @@ class Artifact(Base):
         operation_input_args = {
             "ArtifactArn": artifact_arn,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -1973,10 +1929,6 @@ class Artifact(Base):
         operation_input_args = {
             "ArtifactArn": self.artifact_arn,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_artifact(**operation_input_args)
 
@@ -2061,10 +2013,6 @@ class Artifact(Base):
             "ArtifactArn": self.artifact_arn,
             "Source": self.source,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_artifact(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -2126,9 +2074,11 @@ class Artifact(Base):
             "SortOrder": sort_order,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -2209,10 +2159,6 @@ class Association(Base):
             "SourceArn": self.source_arn,
             "DestinationArn": self.destination_arn,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_association(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -2283,9 +2229,11 @@ class Association(Base):
             "SortOrder": sort_order,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -2335,9 +2283,7 @@ class Association(Base):
             "DestinationArn": destination_arn,
             "AssociationType": association_type,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -2569,10 +2515,6 @@ class AutoMLJob(Base):
         operation_input_args = {
             "AutoMLJobName": auto_ml_job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -2611,10 +2553,6 @@ class AutoMLJob(Base):
         operation_input_args = {
             "AutoMLJobName": self.auto_ml_job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_auto_ml_job(**operation_input_args)
 
@@ -2645,10 +2583,6 @@ class AutoMLJob(Base):
         operation_input_args = {
             "AutoMLJobName": self.auto_ml_job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.stop_auto_ml_job(**operation_input_args)
 
         logger.info(f"Stopping {self.__class__.__name__} - {self.get_name()}")
@@ -2769,9 +2703,11 @@ class AutoMLJob(Base):
             "SortBy": sort_by,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -2828,9 +2764,12 @@ class AutoMLJob(Base):
             "SortOrder": sort_order,
             "SortBy": sort_by,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -3078,10 +3017,6 @@ class AutoMLJobV2(Base):
         operation_input_args = {
             "AutoMLJobName": auto_ml_job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -3120,10 +3055,6 @@ class AutoMLJobV2(Base):
         operation_input_args = {
             "AutoMLJobName": self.auto_ml_job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_auto_ml_job_v2(**operation_input_args)
 
@@ -3358,10 +3289,6 @@ class Cluster(Base):
         operation_input_args = {
             "ClusterName": cluster_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -3400,10 +3327,6 @@ class Cluster(Base):
         operation_input_args = {
             "ClusterName": self.cluster_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_cluster(**operation_input_args)
 
@@ -3485,10 +3408,6 @@ class Cluster(Base):
         operation_input_args = {
             "ClusterName": self.cluster_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_cluster(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -3670,9 +3589,11 @@ class Cluster(Base):
             "SortOrder": sort_order,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -3718,9 +3639,7 @@ class Cluster(Base):
             "ClusterName": self.cluster_name,
             "NodeId": node_id,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -3782,9 +3701,12 @@ class Cluster(Base):
             "SortBy": sort_by,
             "SortOrder": sort_order,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -3829,9 +3751,7 @@ class Cluster(Base):
         operation_input_args = {
             "ClusterName": self.cluster_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -3975,10 +3895,6 @@ class CodeRepository(Base):
         operation_input_args = {
             "CodeRepositoryName": code_repository_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -4016,10 +3932,6 @@ class CodeRepository(Base):
         operation_input_args = {
             "CodeRepositoryName": self.code_repository_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_code_repository(**operation_input_args)
 
@@ -4094,10 +4006,6 @@ class CodeRepository(Base):
         operation_input_args = {
             "CodeRepositoryName": self.code_repository_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_code_repository(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -4156,9 +4064,12 @@ class CodeRepository(Base):
             "SortBy": sort_by,
             "SortOrder": sort_order,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -4377,10 +4288,6 @@ class CompilationJob(Base):
         operation_input_args = {
             "CompilationJobName": compilation_job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -4419,10 +4326,6 @@ class CompilationJob(Base):
         operation_input_args = {
             "CompilationJobName": self.compilation_job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_compilation_job(**operation_input_args)
 
@@ -4455,10 +4358,6 @@ class CompilationJob(Base):
         operation_input_args = {
             "CompilationJobName": self.compilation_job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_compilation_job(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -4486,10 +4385,6 @@ class CompilationJob(Base):
         operation_input_args = {
             "CompilationJobName": self.compilation_job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.stop_compilation_job(**operation_input_args)
 
         logger.info(f"Stopping {self.__class__.__name__} - {self.get_name()}")
@@ -4610,9 +4505,11 @@ class CompilationJob(Base):
             "SortOrder": sort_order,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -4780,10 +4677,6 @@ class Context(Base):
         operation_input_args = {
             "ContextName": context_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -4822,10 +4715,6 @@ class Context(Base):
         operation_input_args = {
             "ContextName": self.context_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_context(**operation_input_args)
 
@@ -4909,10 +4798,6 @@ class Context(Base):
         operation_input_args = {
             "ContextName": self.context_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_context(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -4974,9 +4859,11 @@ class Context(Base):
             "SortOrder": sort_order,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -5196,10 +5083,6 @@ class DataQualityJobDefinition(Base):
         operation_input_args = {
             "JobDefinitionName": job_definition_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -5238,10 +5121,6 @@ class DataQualityJobDefinition(Base):
         operation_input_args = {
             "JobDefinitionName": self.job_definition_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_data_quality_job_definition(**operation_input_args)
 
@@ -5274,10 +5153,6 @@ class DataQualityJobDefinition(Base):
         operation_input_args = {
             "JobDefinitionName": self.job_definition_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_data_quality_job_definition(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -5341,9 +5216,11 @@ class DataQualityJobDefinition(Base):
             "monitoring_job_definition_name": "job_definition_name",
             "monitoring_job_definition_arn": "job_definition_arn",
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -5444,10 +5321,6 @@ class Device(Base):
             "DeviceName": device_name,
             "DeviceFleetName": device_fleet_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -5488,10 +5361,6 @@ class Device(Base):
             "DeviceName": self.device_name,
             "DeviceFleetName": self.device_fleet_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_device(**operation_input_args)
 
@@ -5546,9 +5415,11 @@ class Device(Base):
             "DeviceFleetName": device_fleet_name,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -5732,10 +5603,6 @@ class DeviceFleet(Base):
         operation_input_args = {
             "DeviceFleetName": device_fleet_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -5774,10 +5641,6 @@ class DeviceFleet(Base):
         operation_input_args = {
             "DeviceFleetName": self.device_fleet_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_device_fleet(**operation_input_args)
 
@@ -5863,10 +5726,6 @@ class DeviceFleet(Base):
         operation_input_args = {
             "DeviceFleetName": self.device_fleet_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_device_fleet(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -5930,9 +5789,11 @@ class DeviceFleet(Base):
             "SortOrder": sort_order,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -5974,9 +5835,7 @@ class DeviceFleet(Base):
             "DeviceFleetName": self.device_fleet_name,
             "DeviceNames": device_names,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -6017,9 +5876,7 @@ class DeviceFleet(Base):
         operation_input_args = {
             "DeviceFleetName": self.device_fleet_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -6067,9 +5924,7 @@ class DeviceFleet(Base):
             "Devices": devices,
             "Tags": tags,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -6110,9 +5965,7 @@ class DeviceFleet(Base):
             "DeviceFleetName": self.device_fleet_name,
             "Devices": devices,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -6385,10 +6238,6 @@ class Domain(Base):
         operation_input_args = {
             "DomainId": domain_id,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -6427,10 +6276,6 @@ class Domain(Base):
         operation_input_args = {
             "DomainId": self.domain_id,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_domain(**operation_input_args)
 
@@ -6525,10 +6370,6 @@ class Domain(Base):
             "DomainId": self.domain_id,
             "RetentionPolicy": retention_policy,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_domain(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -6857,10 +6698,6 @@ class EdgeDeploymentPlan(Base):
             "NextToken": next_token,
             "MaxResults": max_results,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -6902,10 +6739,6 @@ class EdgeDeploymentPlan(Base):
             "NextToken": self.next_token,
             "MaxResults": max_results,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_edge_deployment_plan(**operation_input_args)
 
@@ -6938,10 +6771,6 @@ class EdgeDeploymentPlan(Base):
         operation_input_args = {
             "EdgeDeploymentPlanName": self.edge_deployment_plan_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_edge_deployment_plan(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -7008,9 +6837,11 @@ class EdgeDeploymentPlan(Base):
             "SortOrder": sort_order,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -7051,9 +6882,7 @@ class EdgeDeploymentPlan(Base):
             "EdgeDeploymentPlanName": self.edge_deployment_plan_name,
             "Stages": self.stages,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -7095,9 +6924,7 @@ class EdgeDeploymentPlan(Base):
             "EdgeDeploymentPlanName": self.edge_deployment_plan_name,
             "StageName": stage_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -7138,9 +6965,7 @@ class EdgeDeploymentPlan(Base):
             "EdgeDeploymentPlanName": self.edge_deployment_plan_name,
             "StageName": stage_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -7181,9 +7006,7 @@ class EdgeDeploymentPlan(Base):
             "EdgeDeploymentPlanName": self.edge_deployment_plan_name,
             "StageName": stage_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -7231,9 +7054,12 @@ class EdgeDeploymentPlan(Base):
             "ExcludeDevicesDeployedInOtherStage": exclude_devices_deployed_in_other_stage,
             "StageName": stage_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -7441,10 +7267,6 @@ class EdgePackagingJob(Base):
         operation_input_args = {
             "EdgePackagingJobName": edge_packaging_job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -7483,10 +7305,6 @@ class EdgePackagingJob(Base):
         operation_input_args = {
             "EdgePackagingJobName": self.edge_packaging_job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_edge_packaging_job(**operation_input_args)
 
@@ -7516,10 +7334,6 @@ class EdgePackagingJob(Base):
         operation_input_args = {
             "EdgePackagingJobName": self.edge_packaging_job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.stop_edge_packaging_job(**operation_input_args)
 
         logger.info(f"Stopping {self.__class__.__name__} - {self.get_name()}")
@@ -7645,9 +7459,11 @@ class EdgePackagingJob(Base):
             "SortOrder": sort_order,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -7840,10 +7656,6 @@ class Endpoint(Base):
         operation_input_args = {
             "EndpointName": endpoint_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -7881,10 +7693,6 @@ class Endpoint(Base):
         operation_input_args = {
             "EndpointName": self.endpoint_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_endpoint(**operation_input_args)
 
@@ -7973,10 +7781,6 @@ class Endpoint(Base):
         operation_input_args = {
             "EndpointName": self.endpoint_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_endpoint(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -8381,9 +8185,11 @@ class Endpoint(Base):
             "StatusEquals": status_equals,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -8426,9 +8232,7 @@ class Endpoint(Base):
             "EndpointName": self.endpoint_name,
             "DesiredWeightsAndCapacities": desired_weights_and_capacities,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -8643,10 +8447,6 @@ class EndpointConfig(Base):
         operation_input_args = {
             "EndpointConfigName": endpoint_config_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -8684,10 +8484,6 @@ class EndpointConfig(Base):
         operation_input_args = {
             "EndpointConfigName": self.endpoint_config_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_endpoint_config(**operation_input_args)
 
@@ -8719,10 +8515,6 @@ class EndpointConfig(Base):
         operation_input_args = {
             "EndpointConfigName": self.endpoint_config_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_endpoint_config(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -8780,9 +8572,11 @@ class EndpointConfig(Base):
             "CreationTimeAfter": creation_time_after,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -8940,10 +8734,6 @@ class Experiment(Base):
         operation_input_args = {
             "ExperimentName": experiment_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -8982,10 +8772,6 @@ class Experiment(Base):
         operation_input_args = {
             "ExperimentName": self.experiment_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_experiment(**operation_input_args)
 
@@ -9064,10 +8850,6 @@ class Experiment(Base):
         operation_input_args = {
             "ExperimentName": self.experiment_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_experiment(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -9122,9 +8904,11 @@ class Experiment(Base):
             "SortOrder": sort_order,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -9346,10 +9130,6 @@ class FeatureGroup(Base):
             "FeatureGroupName": feature_group_name,
             "NextToken": next_token,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -9389,10 +9169,6 @@ class FeatureGroup(Base):
             "FeatureGroupName": self.feature_group_name,
             "NextToken": self.next_token,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_feature_group(**operation_input_args)
 
@@ -9477,10 +9253,6 @@ class FeatureGroup(Base):
         operation_input_args = {
             "FeatureGroupName": self.feature_group_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_feature_group(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -9664,9 +9436,11 @@ class FeatureGroup(Base):
             "SortBy": sort_by,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -9757,10 +9531,6 @@ class FeatureMetadata(Base):
             "FeatureGroupName": feature_group_name,
             "FeatureName": feature_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -9800,10 +9570,6 @@ class FeatureMetadata(Base):
             "FeatureGroupName": self.feature_group_name,
             "FeatureName": self.feature_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_feature_metadata(**operation_input_args)
 
@@ -10042,10 +9808,6 @@ class FlowDefinition(Base):
         operation_input_args = {
             "FlowDefinitionName": flow_definition_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -10084,10 +9846,6 @@ class FlowDefinition(Base):
         operation_input_args = {
             "FlowDefinitionName": self.flow_definition_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_flow_definition(**operation_input_args)
 
@@ -10121,10 +9879,6 @@ class FlowDefinition(Base):
         operation_input_args = {
             "FlowDefinitionName": self.flow_definition_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_flow_definition(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -10296,9 +10050,11 @@ class FlowDefinition(Base):
             "SortOrder": sort_order,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -10481,10 +10237,6 @@ class Hub(Base):
         operation_input_args = {
             "HubName": hub_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -10523,10 +10275,6 @@ class Hub(Base):
         operation_input_args = {
             "HubName": self.hub_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_hub(**operation_input_args)
 
@@ -10608,10 +10356,6 @@ class Hub(Base):
         operation_input_args = {
             "HubName": self.hub_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_hub(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -10799,9 +10543,11 @@ class Hub(Base):
             "SortOrder": sort_order,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -10920,10 +10666,6 @@ class HubContent(Base):
             "HubContentName": hub_content_name,
             "HubContentVersion": hub_content_version,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -10965,10 +10707,6 @@ class HubContent(Base):
             "HubContentName": self.hub_content_name,
             "HubContentVersion": self.hub_content_version,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_hub_content(**operation_input_args)
 
@@ -11005,10 +10743,6 @@ class HubContent(Base):
             "HubContentName": self.hub_content_name,
             "HubContentVersion": self.hub_content_version,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_hub_content(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -11207,9 +10941,12 @@ class HubContent(Base):
             "SortBy": sort_by,
             "SortOrder": sort_order,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -11314,9 +11051,7 @@ class HubContentReference(Base):
             "MinVersion": min_version,
             "Tags": tags,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -11357,10 +11092,6 @@ class HubContentReference(Base):
             "HubContentType": hub_content_type,
             "HubContentName": self.hub_content_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_hub_content_reference(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -11502,10 +11233,6 @@ class HumanTaskUi(Base):
         operation_input_args = {
             "HumanTaskUiName": human_task_ui_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -11544,10 +11271,6 @@ class HumanTaskUi(Base):
         operation_input_args = {
             "HumanTaskUiName": self.human_task_ui_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_human_task_ui(**operation_input_args)
 
@@ -11580,10 +11303,6 @@ class HumanTaskUi(Base):
         operation_input_args = {
             "HumanTaskUiName": self.human_task_ui_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_human_task_ui(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -11748,9 +11467,11 @@ class HumanTaskUi(Base):
             "SortOrder": sort_order,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -11973,10 +11694,6 @@ class HyperParameterTuningJob(Base):
         operation_input_args = {
             "HyperParameterTuningJobName": hyper_parameter_tuning_job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -12015,10 +11732,6 @@ class HyperParameterTuningJob(Base):
         operation_input_args = {
             "HyperParameterTuningJobName": self.hyper_parameter_tuning_job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_hyper_parameter_tuning_job(**operation_input_args)
 
@@ -12050,10 +11763,6 @@ class HyperParameterTuningJob(Base):
         operation_input_args = {
             "HyperParameterTuningJobName": self.hyper_parameter_tuning_job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_hyper_parameter_tuning_job(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -12081,10 +11790,6 @@ class HyperParameterTuningJob(Base):
         operation_input_args = {
             "HyperParameterTuningJobName": self.hyper_parameter_tuning_job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.stop_hyper_parameter_tuning_job(**operation_input_args)
 
         logger.info(f"Stopping {self.__class__.__name__} - {self.get_name()}")
@@ -12270,9 +11975,11 @@ class HyperParameterTuningJob(Base):
             "StatusEquals": status_equals,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -12326,9 +12033,12 @@ class HyperParameterTuningJob(Base):
             "SortBy": sort_by,
             "SortOrder": sort_order,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -12508,10 +12218,6 @@ class Image(Base):
         operation_input_args = {
             "ImageName": image_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -12550,10 +12256,6 @@ class Image(Base):
         operation_input_args = {
             "ImageName": self.image_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_image(**operation_input_args)
 
@@ -12641,10 +12343,6 @@ class Image(Base):
         operation_input_args = {
             "ImageName": self.image_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_image(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -12840,9 +12538,11 @@ class Image(Base):
             "SortOrder": sort_order,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -12893,9 +12593,12 @@ class Image(Base):
             "Alias": alias,
             "Version": version,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -13101,10 +12804,6 @@ class ImageVersion(Base):
             "Version": version,
             "Alias": alias,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -13146,10 +12845,6 @@ class ImageVersion(Base):
             "Version": self.version,
             "Alias": alias,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_image_version(**operation_input_args)
 
@@ -13255,10 +12950,6 @@ class ImageVersion(Base):
             "Version": self.version,
             "Alias": alias,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_image_version(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -13549,10 +13240,6 @@ class InferenceComponent(Base):
         operation_input_args = {
             "InferenceComponentName": inference_component_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -13590,10 +13277,6 @@ class InferenceComponent(Base):
         operation_input_args = {
             "InferenceComponentName": self.inference_component_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_inference_component(**operation_input_args)
 
@@ -13670,10 +13353,6 @@ class InferenceComponent(Base):
         operation_input_args = {
             "InferenceComponentName": self.inference_component_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_inference_component(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -13870,9 +13549,11 @@ class InferenceComponent(Base):
             "VariantNameEquals": variant_name_equals,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -13915,9 +13596,7 @@ class InferenceComponent(Base):
             "InferenceComponentName": self.inference_component_name,
             "DesiredRuntimeConfig": desired_runtime_config,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -14128,10 +13807,6 @@ class InferenceExperiment(Base):
         operation_input_args = {
             "Name": name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -14170,10 +13845,6 @@ class InferenceExperiment(Base):
         operation_input_args = {
             "Name": self.name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_inference_experiment(**operation_input_args)
 
@@ -14260,10 +13931,6 @@ class InferenceExperiment(Base):
         operation_input_args = {
             "Name": self.name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_inference_experiment(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -14296,10 +13963,6 @@ class InferenceExperiment(Base):
             "DesiredState": self.desired_state,
             "Reason": self.reason,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.stop_inference_experiment(**operation_input_args)
 
         logger.info(f"Stopping {self.__class__.__name__} - {self.get_name()}")
@@ -14432,9 +14095,11 @@ class InferenceExperiment(Base):
             "SortOrder": sort_order,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -14638,10 +14303,6 @@ class InferenceRecommendationsJob(Base):
         operation_input_args = {
             "JobName": job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -14680,10 +14341,6 @@ class InferenceRecommendationsJob(Base):
         operation_input_args = {
             "JobName": self.job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_inference_recommendations_job(**operation_input_args)
 
@@ -14714,10 +14371,6 @@ class InferenceRecommendationsJob(Base):
         operation_input_args = {
             "JobName": self.job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.stop_inference_recommendations_job(**operation_input_args)
 
         logger.info(f"Stopping {self.__class__.__name__} - {self.get_name()}")
@@ -14913,9 +14566,11 @@ class InferenceRecommendationsJob(Base):
             "ModelPackageVersionArnEquals": model_package_version_arn_equals,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -14964,9 +14619,12 @@ class InferenceRecommendationsJob(Base):
             "Status": self.status,
             "StepType": step_type,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -15200,10 +14858,6 @@ class LabelingJob(Base):
         operation_input_args = {
             "LabelingJobName": labeling_job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -15242,10 +14896,6 @@ class LabelingJob(Base):
         operation_input_args = {
             "LabelingJobName": self.labeling_job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_labeling_job(**operation_input_args)
 
@@ -15276,10 +14926,6 @@ class LabelingJob(Base):
         operation_input_args = {
             "LabelingJobName": self.labeling_job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.stop_labeling_job(**operation_input_args)
 
         logger.info(f"Stopping {self.__class__.__name__} - {self.get_name()}")
@@ -15400,9 +15046,11 @@ class LabelingJob(Base):
             "StatusEquals": status_equals,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -15490,10 +15138,6 @@ class LineageGroup(Base):
         operation_input_args = {
             "LineageGroupName": lineage_group_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -15532,10 +15176,6 @@ class LineageGroup(Base):
         operation_input_args = {
             "LineageGroupName": self.lineage_group_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_lineage_group(**operation_input_args)
 
@@ -15593,9 +15233,11 @@ class LineageGroup(Base):
             "SortOrder": sort_order,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -15638,9 +15280,7 @@ class LineageGroup(Base):
         operation_input_args = {
             "LineageGroupName": self.lineage_group_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -15838,10 +15478,6 @@ class MlflowTrackingServer(Base):
         operation_input_args = {
             "TrackingServerName": tracking_server_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -15880,10 +15516,6 @@ class MlflowTrackingServer(Base):
         operation_input_args = {
             "TrackingServerName": self.tracking_server_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_mlflow_tracking_server(**operation_input_args)
 
@@ -15968,10 +15600,6 @@ class MlflowTrackingServer(Base):
         operation_input_args = {
             "TrackingServerName": self.tracking_server_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_mlflow_tracking_server(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -16000,10 +15628,6 @@ class MlflowTrackingServer(Base):
         operation_input_args = {
             "TrackingServerName": self.tracking_server_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.stop_mlflow_tracking_server(**operation_input_args)
 
         logger.info(f"Stopping {self.__class__.__name__} - {self.get_name()}")
@@ -16206,9 +15830,11 @@ class MlflowTrackingServer(Base):
             "SortOrder": sort_order,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -16407,10 +16033,6 @@ class Model(Base):
         operation_input_args = {
             "ModelName": model_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -16448,10 +16070,6 @@ class Model(Base):
         operation_input_args = {
             "ModelName": self.model_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_model(**operation_input_args)
 
@@ -16483,10 +16101,6 @@ class Model(Base):
         operation_input_args = {
             "ModelName": self.model_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_model(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -16544,9 +16158,11 @@ class Model(Base):
             "CreationTimeAfter": creation_time_after,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -16592,9 +16208,12 @@ class Model(Base):
         operation_input_args = {
             "SearchExpression": search_expression,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -16818,10 +16437,6 @@ class ModelBiasJobDefinition(Base):
         operation_input_args = {
             "JobDefinitionName": job_definition_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -16860,10 +16475,6 @@ class ModelBiasJobDefinition(Base):
         operation_input_args = {
             "JobDefinitionName": self.job_definition_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_model_bias_job_definition(**operation_input_args)
 
@@ -16896,10 +16507,6 @@ class ModelBiasJobDefinition(Base):
         operation_input_args = {
             "JobDefinitionName": self.job_definition_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_model_bias_job_definition(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -16963,9 +16570,11 @@ class ModelBiasJobDefinition(Base):
             "monitoring_job_definition_name": "job_definition_name",
             "monitoring_job_definition_arn": "job_definition_arn",
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -17149,10 +16758,6 @@ class ModelCard(Base):
             "ModelCardName": model_card_name,
             "ModelCardVersion": model_card_version,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -17192,10 +16797,6 @@ class ModelCard(Base):
             "ModelCardName": self.model_card_name,
             "ModelCardVersion": self.model_card_version,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_model_card(**operation_input_args)
 
@@ -17277,10 +16878,6 @@ class ModelCard(Base):
         operation_input_args = {
             "ModelCardName": self.model_card_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_model_card(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -17391,9 +16988,11 @@ class ModelCard(Base):
             "SortOrder": sort_order,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -17451,9 +17050,12 @@ class ModelCard(Base):
             "SortBy": sort_by,
             "SortOrder": sort_order,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -17640,10 +17242,6 @@ class ModelCardExportJob(Base):
         operation_input_args = {
             "ModelCardExportJobArn": model_card_export_job_arn,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -17682,10 +17280,6 @@ class ModelCardExportJob(Base):
         operation_input_args = {
             "ModelCardExportJobArn": self.model_card_export_job_arn,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_model_card_export_job(**operation_input_args)
 
@@ -17811,9 +17405,11 @@ class ModelCardExportJob(Base):
             "SortOrder": sort_order,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -18037,10 +17633,6 @@ class ModelExplainabilityJobDefinition(Base):
         operation_input_args = {
             "JobDefinitionName": job_definition_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -18081,10 +17673,6 @@ class ModelExplainabilityJobDefinition(Base):
         operation_input_args = {
             "JobDefinitionName": self.job_definition_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_model_explainability_job_definition(**operation_input_args)
 
@@ -18117,10 +17705,6 @@ class ModelExplainabilityJobDefinition(Base):
         operation_input_args = {
             "JobDefinitionName": self.job_definition_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_model_explainability_job_definition(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -18184,9 +17768,11 @@ class ModelExplainabilityJobDefinition(Base):
             "monitoring_job_definition_name": "job_definition_name",
             "monitoring_job_definition_arn": "job_definition_arn",
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -18497,10 +18083,6 @@ class ModelPackage(Base):
         operation_input_args = {
             "ModelPackageName": model_package_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -18538,10 +18120,6 @@ class ModelPackage(Base):
         operation_input_args = {
             "ModelPackageName": self.model_package_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_model_package(**operation_input_args)
 
@@ -18638,10 +18216,6 @@ class ModelPackage(Base):
         operation_input_args = {
             "ModelPackageName": self.model_package_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_model_package(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -18826,9 +18400,11 @@ class ModelPackage(Base):
             "SortOrder": sort_order,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -18872,9 +18448,7 @@ class ModelPackage(Base):
         operation_input_args = {
             "ModelPackageArnList": model_package_arn_list,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -19026,10 +18600,6 @@ class ModelPackageGroup(Base):
         operation_input_args = {
             "ModelPackageGroupName": model_package_group_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -19067,10 +18637,6 @@ class ModelPackageGroup(Base):
         operation_input_args = {
             "ModelPackageGroupName": self.model_package_group_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_model_package_group(**operation_input_args)
 
@@ -19103,10 +18669,6 @@ class ModelPackageGroup(Base):
         operation_input_args = {
             "ModelPackageGroupName": self.model_package_group_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_model_package_group(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -19289,9 +18851,11 @@ class ModelPackageGroup(Base):
             "CrossAccountFilterOption": cross_account_filter_option,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -19333,9 +18897,7 @@ class ModelPackageGroup(Base):
         operation_input_args = {
             "ModelPackageGroupName": self.model_package_group_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -19375,9 +18937,7 @@ class ModelPackageGroup(Base):
         operation_input_args = {
             "ModelPackageGroupName": self.model_package_group_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -19419,9 +18979,7 @@ class ModelPackageGroup(Base):
             "ModelPackageGroupName": self.model_package_group_name,
             "ResourcePolicy": resource_policy,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -19640,10 +19198,6 @@ class ModelQualityJobDefinition(Base):
         operation_input_args = {
             "JobDefinitionName": job_definition_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -19682,10 +19236,6 @@ class ModelQualityJobDefinition(Base):
         operation_input_args = {
             "JobDefinitionName": self.job_definition_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_model_quality_job_definition(**operation_input_args)
 
@@ -19718,10 +19268,6 @@ class ModelQualityJobDefinition(Base):
         operation_input_args = {
             "JobDefinitionName": self.job_definition_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_model_quality_job_definition(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -19785,9 +19331,11 @@ class ModelQualityJobDefinition(Base):
             "monitoring_job_definition_name": "job_definition_name",
             "monitoring_job_definition_arn": "job_definition_arn",
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -19932,9 +19480,11 @@ class MonitoringAlert(Base):
             "MonitoringScheduleName": monitoring_schedule_name,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -20001,9 +19551,7 @@ class MonitoringAlert(Base):
             "CreationTimeAfter": creation_time_after,
             "StatusEquals": status_equals,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -20139,9 +19687,11 @@ class MonitoringExecution(Base):
             "MonitoringTypeEquals": monitoring_type_equals,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -20338,10 +19888,6 @@ class MonitoringSchedule(Base):
         operation_input_args = {
             "MonitoringScheduleName": monitoring_schedule_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -20380,10 +19926,6 @@ class MonitoringSchedule(Base):
         operation_input_args = {
             "MonitoringScheduleName": self.monitoring_schedule_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_monitoring_schedule(**operation_input_args)
 
@@ -20461,10 +20003,6 @@ class MonitoringSchedule(Base):
         operation_input_args = {
             "MonitoringScheduleName": self.monitoring_schedule_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_monitoring_schedule(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -20492,10 +20030,6 @@ class MonitoringSchedule(Base):
         operation_input_args = {
             "MonitoringScheduleName": self.monitoring_schedule_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.stop_monitoring_schedule(**operation_input_args)
 
         logger.info(f"Stopping {self.__class__.__name__} - {self.get_name()}")
@@ -20632,9 +20166,11 @@ class MonitoringSchedule(Base):
             "MonitoringTypeEquals": monitoring_type_equals,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -20878,10 +20414,6 @@ class NotebookInstance(Base):
         operation_input_args = {
             "NotebookInstanceName": notebook_instance_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -20919,10 +20451,6 @@ class NotebookInstance(Base):
         operation_input_args = {
             "NotebookInstanceName": self.notebook_instance_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_notebook_instance(**operation_input_args)
 
@@ -21031,10 +20559,6 @@ class NotebookInstance(Base):
         operation_input_args = {
             "NotebookInstanceName": self.notebook_instance_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_notebook_instance(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -21061,10 +20585,6 @@ class NotebookInstance(Base):
         operation_input_args = {
             "NotebookInstanceName": self.notebook_instance_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.stop_notebook_instance(**operation_input_args)
 
         logger.info(f"Stopping {self.__class__.__name__} - {self.get_name()}")
@@ -21264,9 +20784,11 @@ class NotebookInstance(Base):
             "AdditionalCodeRepositoryEquals": additional_code_repository_equals,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -21419,10 +20941,6 @@ class NotebookInstanceLifecycleConfig(Base):
         operation_input_args = {
             "NotebookInstanceLifecycleConfigName": notebook_instance_lifecycle_config_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -21460,10 +20978,6 @@ class NotebookInstanceLifecycleConfig(Base):
         operation_input_args = {
             "NotebookInstanceLifecycleConfigName": self.notebook_instance_lifecycle_config_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_notebook_instance_lifecycle_config(**operation_input_args)
 
@@ -21540,10 +21054,6 @@ class NotebookInstanceLifecycleConfig(Base):
         operation_input_args = {
             "NotebookInstanceLifecycleConfigName": self.notebook_instance_lifecycle_config_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_notebook_instance_lifecycle_config(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -21607,9 +21117,11 @@ class NotebookInstanceLifecycleConfig(Base):
             "LastModifiedTimeAfter": last_modified_time_after,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -21827,10 +21339,6 @@ class OptimizationJob(Base):
         operation_input_args = {
             "OptimizationJobName": optimization_job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -21869,10 +21377,6 @@ class OptimizationJob(Base):
         operation_input_args = {
             "OptimizationJobName": self.optimization_job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_optimization_job(**operation_input_args)
 
@@ -21905,10 +21409,6 @@ class OptimizationJob(Base):
         operation_input_args = {
             "OptimizationJobName": self.optimization_job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_optimization_job(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -21936,10 +21436,6 @@ class OptimizationJob(Base):
         operation_input_args = {
             "OptimizationJobName": self.optimization_job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.stop_optimization_job(**operation_input_args)
 
         logger.info(f"Stopping {self.__class__.__name__} - {self.get_name()}")
@@ -22065,9 +21561,11 @@ class OptimizationJob(Base):
             "SortOrder": sort_order,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -22264,10 +21762,6 @@ class Pipeline(Base):
         operation_input_args = {
             "PipelineName": pipeline_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -22306,10 +21800,6 @@ class Pipeline(Base):
         operation_input_args = {
             "PipelineName": self.pipeline_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_pipeline(**operation_input_args)
 
@@ -22403,10 +21893,6 @@ class Pipeline(Base):
             "PipelineName": self.pipeline_name,
             "ClientRequestToken": client_request_token,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_pipeline(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -22575,9 +22061,11 @@ class Pipeline(Base):
             "SortOrder": sort_order,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -22675,10 +22163,6 @@ class PipelineExecution(Base):
         operation_input_args = {
             "PipelineExecutionArn": pipeline_execution_arn,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -22717,10 +22201,6 @@ class PipelineExecution(Base):
         operation_input_args = {
             "PipelineExecutionArn": self.pipeline_execution_arn,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_pipeline_execution(**operation_input_args)
 
@@ -22801,10 +22281,6 @@ class PipelineExecution(Base):
             "PipelineExecutionArn": self.pipeline_execution_arn,
             "ClientRequestToken": self.client_request_token,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.stop_pipeline_execution(**operation_input_args)
 
         logger.info(f"Stopping {self.__class__.__name__} - {self.get_name()}")
@@ -22922,9 +22398,11 @@ class PipelineExecution(Base):
             "SortOrder": sort_order,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -22967,9 +22445,7 @@ class PipelineExecution(Base):
         operation_input_args = {
             "PipelineExecutionArn": self.pipeline_execution_arn,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -23019,9 +22495,12 @@ class PipelineExecution(Base):
             "PipelineExecutionArn": self.pipeline_execution_arn,
             "SortOrder": sort_order,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -23070,9 +22549,12 @@ class PipelineExecution(Base):
         operation_input_args = {
             "PipelineExecutionArn": self.pipeline_execution_arn,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -23122,9 +22604,7 @@ class PipelineExecution(Base):
             "ClientRequestToken": client_request_token,
             "ParallelismConfiguration": self.parallelism_configuration,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -23171,9 +22651,7 @@ class PipelineExecution(Base):
             "FailureReason": self.failure_reason,
             "ClientRequestToken": client_request_token,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -23222,9 +22700,7 @@ class PipelineExecution(Base):
             "OutputParameters": output_parameters,
             "ClientRequestToken": client_request_token,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -23325,9 +22801,7 @@ class PresignedDomainUrl(Base):
             "SpaceName": space_name,
             "LandingUri": landing_uri,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -23416,9 +22890,7 @@ class PresignedMlflowTrackingServerUrl(Base):
             "ExpiresInSeconds": expires_in_seconds,
             "SessionExpirationDurationInSeconds": session_expiration_duration_in_seconds,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -23501,9 +22973,7 @@ class PresignedNotebookInstanceUrl(Base):
             "NotebookInstanceName": notebook_instance_name,
             "SessionExpirationDurationInSeconds": session_expiration_duration_in_seconds,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -23736,10 +23206,6 @@ class ProcessingJob(Base):
         operation_input_args = {
             "ProcessingJobName": processing_job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -23778,10 +23244,6 @@ class ProcessingJob(Base):
         operation_input_args = {
             "ProcessingJobName": self.processing_job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_processing_job(**operation_input_args)
 
@@ -23812,10 +23274,6 @@ class ProcessingJob(Base):
         operation_input_args = {
             "ProcessingJobName": self.processing_job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.stop_processing_job(**operation_input_args)
 
         logger.info(f"Stopping {self.__class__.__name__} - {self.get_name()}")
@@ -23936,9 +23394,11 @@ class ProcessingJob(Base):
             "SortOrder": sort_order,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -24101,10 +23561,6 @@ class Project(Base):
         operation_input_args = {
             "ProjectName": project_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -24142,10 +23598,6 @@ class Project(Base):
         operation_input_args = {
             "ProjectName": self.project_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_project(**operation_input_args)
 
@@ -24231,10 +23683,6 @@ class Project(Base):
         operation_input_args = {
             "ProjectName": self.project_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_project(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -24358,9 +23806,11 @@ class Project(Base):
             "SortOrder": sort_order,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -24458,9 +23908,11 @@ class ResourceCatalog(Base):
             "SortBy": sort_by,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -24750,10 +24202,6 @@ class Space(Base):
             "DomainId": domain_id,
             "SpaceName": space_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -24793,10 +24241,6 @@ class Space(Base):
             "DomainId": self.domain_id,
             "SpaceName": self.space_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_space(**operation_input_args)
 
@@ -24879,10 +24323,6 @@ class Space(Base):
             "DomainId": self.domain_id,
             "SpaceName": self.space_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_space(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -25069,9 +24509,11 @@ class Space(Base):
             "SpaceNameContains": space_name_contains,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -25227,10 +24669,6 @@ class StudioLifecycleConfig(Base):
         operation_input_args = {
             "StudioLifecycleConfigName": studio_lifecycle_config_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -25269,10 +24707,6 @@ class StudioLifecycleConfig(Base):
         operation_input_args = {
             "StudioLifecycleConfigName": self.studio_lifecycle_config_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_studio_lifecycle_config(**operation_input_args)
 
@@ -25306,10 +24740,6 @@ class StudioLifecycleConfig(Base):
         operation_input_args = {
             "StudioLifecycleConfigName": self.studio_lifecycle_config_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_studio_lifecycle_config(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -25377,9 +24807,11 @@ class StudioLifecycleConfig(Base):
             "SortOrder": sort_order,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -25453,10 +24885,6 @@ class SubscribedWorkteam(Base):
         operation_input_args = {
             "WorkteamArn": workteam_arn,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -25494,10 +24922,6 @@ class SubscribedWorkteam(Base):
         operation_input_args = {
             "WorkteamArn": self.workteam_arn,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_subscribed_workteam(**operation_input_args)
 
@@ -25546,9 +24970,11 @@ class SubscribedWorkteam(Base):
             "NameContains": name_contains,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -25630,9 +25056,11 @@ class Tag(Base):
             "ResourceArn": resource_arn,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -25677,9 +25105,7 @@ class Tag(Base):
             "ResourceArn": resource_arn,
             "Tags": tags,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -25723,9 +25149,7 @@ class Tag(Base):
             "ResourceArn": resource_arn,
             "TagKeys": tag_keys,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -26045,10 +25469,6 @@ class TrainingJob(Base):
         operation_input_args = {
             "TrainingJobName": training_job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -26087,10 +25507,6 @@ class TrainingJob(Base):
         operation_input_args = {
             "TrainingJobName": self.training_job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_training_job(**operation_input_args)
 
@@ -26172,10 +25588,6 @@ class TrainingJob(Base):
         operation_input_args = {
             "TrainingJobName": self.training_job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.stop_training_job(**operation_input_args)
 
         logger.info(f"Stopping {self.__class__.__name__} - {self.get_name()}")
@@ -26299,9 +25711,11 @@ class TrainingJob(Base):
             "WarmPoolStatusEquals": warm_pool_status_equals,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -26547,10 +25961,6 @@ class TransformJob(Base):
         operation_input_args = {
             "TransformJobName": transform_job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -26589,10 +25999,6 @@ class TransformJob(Base):
         operation_input_args = {
             "TransformJobName": self.transform_job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_transform_job(**operation_input_args)
 
@@ -26623,10 +26029,6 @@ class TransformJob(Base):
         operation_input_args = {
             "TransformJobName": self.transform_job_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.stop_transform_job(**operation_input_args)
 
         logger.info(f"Stopping {self.__class__.__name__} - {self.get_name()}")
@@ -26747,9 +26149,11 @@ class TransformJob(Base):
             "SortOrder": sort_order,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -26913,10 +26317,6 @@ class Trial(Base):
         operation_input_args = {
             "TrialName": trial_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -26955,10 +26355,6 @@ class Trial(Base):
         operation_input_args = {
             "TrialName": self.trial_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_trial(**operation_input_args)
 
@@ -27035,10 +26431,6 @@ class Trial(Base):
         operation_input_args = {
             "TrialName": self.trial_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_trial(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -27100,9 +26492,11 @@ class Trial(Base):
             "SortOrder": sort_order,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -27296,10 +26690,6 @@ class TrialComponent(Base):
         operation_input_args = {
             "TrialComponentName": trial_component_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -27338,10 +26728,6 @@ class TrialComponent(Base):
         operation_input_args = {
             "TrialComponentName": self.trial_component_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_trial_component(**operation_input_args)
 
@@ -27441,10 +26827,6 @@ class TrialComponent(Base):
         operation_input_args = {
             "TrialComponentName": self.trial_component_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_trial_component(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -27564,9 +26946,11 @@ class TrialComponent(Base):
             "SortOrder": sort_order,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -27610,9 +26994,7 @@ class TrialComponent(Base):
             "TrialComponentName": self.trial_component_name,
             "TrialName": trial_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -27654,9 +27036,7 @@ class TrialComponent(Base):
             "TrialComponentName": self.trial_component_name,
             "TrialName": trial_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
@@ -27873,10 +27253,6 @@ class UserProfile(Base):
             "DomainId": domain_id,
             "UserProfileName": user_profile_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -27917,10 +27293,6 @@ class UserProfile(Base):
             "DomainId": self.domain_id,
             "UserProfileName": self.user_profile_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_user_profile(**operation_input_args)
 
@@ -28002,10 +27374,6 @@ class UserProfile(Base):
             "DomainId": self.domain_id,
             "UserProfileName": self.user_profile_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_user_profile(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -28196,9 +27564,11 @@ class UserProfile(Base):
             "UserProfileNameContains": user_profile_name_contains,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -28366,10 +27736,6 @@ class Workforce(Base):
         operation_input_args = {
             "WorkforceName": workforce_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -28407,10 +27773,6 @@ class Workforce(Base):
         operation_input_args = {
             "WorkforceName": self.workforce_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_workforce(**operation_input_args)
 
@@ -28495,10 +27857,6 @@ class Workforce(Base):
         operation_input_args = {
             "WorkforceName": self.workforce_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_workforce(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -28666,9 +28024,11 @@ class Workforce(Base):
             "NameContains": name_contains,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -28820,10 +28180,6 @@ class Workteam(Base):
         operation_input_args = {
             "WorkteamName": workteam_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
         )
@@ -28861,10 +28217,6 @@ class Workteam(Base):
         operation_input_args = {
             "WorkteamName": self.workteam_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client = Base.get_sagemaker_client()
         response = client.describe_workteam(**operation_input_args)
 
@@ -28952,10 +28304,6 @@ class Workteam(Base):
         operation_input_args = {
             "WorkteamName": self.workteam_name,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
-
         client.delete_workteam(**operation_input_args)
 
         logger.info(f"Deleting {self.__class__.__name__} - {self.get_name()}")
@@ -29007,9 +28355,11 @@ class Workteam(Base):
             "NameContains": name_contains,
         }
 
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
 
         return ResourceIterator(
             client=client,
@@ -29071,9 +28421,12 @@ class Workteam(Base):
             "SortBy": sort_by,
             "SortOrder": sort_order,
         }
-        # serialize the input request
-        operation_input_args = serialize(operation_input_args)
-        logger.debug(f"Serialized input request: {operation_input_args}")
+        operation_input_args = {
+            k: v
+            for k, v in operation_input_args.items()
+            if v is not None and not isinstance(v, Unassigned)
+        }
+        logger.debug(f"Input request: {operation_input_args}")
 
         client = Base.get_sagemaker_client(
             session=session, region_name=region, service_name="sagemaker"
