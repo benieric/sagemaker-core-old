@@ -33,7 +33,7 @@ def parse_args():
     parser.add_argument("--train", type=str, default=os.environ.get("SM_CHANNEL_TRAIN"))
     parser.add_argument("--test", type=str, default=os.environ.get("SM_CHANNEL_TEST"))
 
-    # Model directory: we will use the default set by SageMaker, /opt/ml/model
+    # Model directory: we will use the default set by SageMaker, /opt/ml/model/ 
     parser.add_argument("--model_dir", type=str, default=os.environ.get("SM_MODEL_DIR"))
 
     return parser.parse_known_args()

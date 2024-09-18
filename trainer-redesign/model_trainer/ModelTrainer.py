@@ -13,6 +13,7 @@
 
 from enum import Enum
 import shlex
+import os
 from typing import Optional, List, Union, Dict, Tuple
 import sagemaker
 from sagemaker import image_uris, get_execution_role, Session
@@ -26,7 +27,6 @@ from sagemaker_core.shapes import (
     ResourceConfig,
     StoppingCondition,
     OutputDataConfig,
-    TrainingImageConfig,
     AlgorithmSpecification,
     Channel,
     DataSource,
@@ -44,6 +44,9 @@ from model_trainer.utils import (
 )
 
 from sagemaker_core.main.utils import logger
+
+
+DEFAULT_INSTANCE_TYPE = "ml.m5.xlarge"
 
 class TrainingRunMode(Enum):
     REMOTE = "Remote"
@@ -101,7 +104,7 @@ class ImageSpec():
         return image_uris.retrieve(
             framework=self.framework_name, 
             image_scope=self.image_scope,
-            instance_type=self.instance_type,
+            instance_type=self.instance_type or DEFAULT_INSTANCE_TYPE,
             py_version=self.py_version,
             region=self.region, 
             version=self.version,
@@ -130,9 +133,11 @@ class SourceCodeConfig(Base):
         commnd (str): The raw commands to execute in the training job container (eg, "python train.py <args>").
         source_dir (Optional[Union[str, S3DataSource]]): The directory containing the source code to be used in the training job container. This can be a local directory path or an S3 URI.
             References to files in the source_dir in the container should be relative to the source_dir and in the format "opt/ml/input/data/code/<path_to_file>".
+        training_script (Optional[str]): The training script to be executed in the training job container.
     """
-    command: str
+    command: Optional[str]
     source_dir: Optional[Union[str, S3DataSource]]
+    training_script: Optional[str]
 
 
 class DistributionConfig:
@@ -198,6 +203,7 @@ class ModelTrainer:
     @staticmethod
     def _default_resource_config() -> ResourceConfig:
         x = ResourceConfig(
+            instance_type=DEFAULT_INSTANCE_TYPE,
             volume_size_in_gb=30,
             instance_count=1,
         )
@@ -286,14 +292,25 @@ class ModelTrainer:
         self.source_code_config = source_code_config
         
     def get_entrypoint_and_arguments(self, source_code_config: SourceCodeConfig) -> Tuple[List[str], List[str]]:
-        commands = source_code_config.command.strip()
+        if source_code_config.command and source_code_config.training_script:
+            raise ValueError("Only one of command or training_script should be provided")
+
+        if source_code_config.command:    
+            commands = source_code_config.command.strip()
+            
+            # remove any extra spaces greater than 1
+            commands = " ".join(commands.split())
+            
+            container_entrypoint = shlex.split(commands)[0]
+            container_entrypoint = [container_entrypoint]
+            container_arguments = shlex.split(commands)[1:]
         
-        # remove any extra spaces greater than 1
-        commands = " ".join(commands.split())
-        
-        container_entrypoint = shlex.split(commands)[0]
-        container_entrypoint = [container_entrypoint]
-        container_arguments = shlex.split(commands)[1:]
+        elif source_code_config.training_script:
+            if not source_code_config.source_dir:
+                raise ValueError("source_dir must be provided if training_script is provided")
+            
+            container_entrypoint = ["python"]
+            container_arguments = [f"/opt/ml/input/data/code/{source_code_config.training_script}"]
         
         return container_entrypoint, container_arguments
         
